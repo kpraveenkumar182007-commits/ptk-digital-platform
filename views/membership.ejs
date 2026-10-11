@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= settings.party_name_english || 'PTK — Puthiya Thalaimurai Kazhagam' %></title>
+    <meta name="description" content="PTK party website and membership platform" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil || 'PTK — புதிய தலைமுறை கழகம்' %></div>
+            <small><%= settings.party_name_english || 'PTK — Puthiya Thalaimurai Kazhagam' %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#about">About</a>
+          <a href="#mission">Vision</a>
+          <a href="#announcements">Announcements</a>
+          <a href="#events">Events</a>
+          <a href="/membership">Membership</a>
+          <a href="/admin/login">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div>
+            <div class="eyebrow" style="color: #fff;">Welcome to PTK</div>
+            <h1><%= settings.party_name_tamil || 'PTK — புதிய தலைமுறை கழகம்' %></h1>
+            <p><%= settings.tagline || 'Together for a stronger tomorrow' %></p>
+            <div class="cta-row">
+              <a class="btn btn-primary" href="/membership">Apply for Membership</a>
+              <a class="btn btn-secondary" href="#announcements">Latest Updates</a>
+            </div>
+            <div class="stat-strip">
+              <div class="stat-box">
+                <strong><%= heroStats.members || 0 %></strong>
+                <span>Members</span>
+              </div>
+              <div class="stat-box">
+                <strong><%= heroStats.districts || 0 %></strong>
+                <span>Districts</span>
+              </div>
+              <div class="stat-box">
+                <strong><%= heroStats.volunteers || 0 %></strong>
+                <span>Volunteers</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-panel">
+            <div class="brand-mark" style="width:64px;height:64px;font-size:1.4rem;margin-bottom:16px;">PTK</div>
+            <h3><%= settings.leader_name || 'PTK Leadership' %></h3>
+            <p><%= settings.leader_title || 'Party President' %></p>
+            <p><strong>Email:</strong> <%= settings.contact_email || 'hello@ptkparty.org' %></p>
+            <p><strong>Phone:</strong> <%= settings.contact_phone || '+91 98765 43210' %></p>
+            <p><strong>Address:</strong> <%= settings.contact_address || 'PTK Headquarters, Tamil Nadu' %></p>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">About PTK</div>
+            <h2>Building a strong, inclusive political future</h2>
+          </div>
+          <div class="grid-3">
+            <div class="card">
+              <div class="value-icon">🏛️</div>
+              <h3>Our Legacy</h3>
+              <p><%= settings.about_text || 'PTK is a people-first political movement founded on integrity, service, and progress for every community.' %></p>
+            </div>
+            <div class="card">
+              <div class="value-icon">🎯</div>
+              <h3>Mission</h3>
+              <p><%= settings.mission_text || 'To build a just, people-led, transparent and inclusive political future for Tamil communities.' %></p>
+            </div>
+            <div class="card">
+              <div class="value-icon">✨</div>
+              <h3>Vision</h3>
+              <p><%= settings.vision_text || 'To create a vibrant, responsive, and democratic society driven by dignity, opportunity and unity.' %></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mission" class="section" style="background:#eef4ef;">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Core Principles</div>
+            <h2>Values that guide our work</h2>
+          </div>
+          <div class="list-grid">
+            <div class="article-card">
+              <h3>People First</h3>
+              <p>We serve communities through direct engagement, ethical governance and long-term development.</p>
+            </div>
+            <div class="article-card">
+              <h3>Integrity</h3>
+              <p>Our politics are grounded in accountability, transparency and honest public leadership.</p>
+            </div>
+            <div class="article-card">
+              <h3>Progress</h3>
+              <p>We work to improve livelihoods, infrastructure, education, healthcare and opportunity for all.</p>
+            </div>
+            <div class="article-card">
+              <h3>Unity</h3>
+              <p>We bring together workers, youth, women, farmers and professionals around common goals.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="announcements" class="section">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Announcements</div>
+            <h2>Latest updates from PTK</h2>
+          </div>
+          <div class="list-grid">
+            <% announcements.forEach((item) => { %>
+              <article class="article-card">
+                <h3><%= item.title %></h3>
+                <p><%= item.content %></p>
+                <div class="meta"><%= formatDate(item.created_at) %></div>
+              </article>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+
+      <section id="events" class="section" style="background:#f6f9f5;">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Events</div>
+            <h2>Upcoming public engagements</h2>
+          </div>
+          <div class="list-grid">
+            <% events.forEach((event) => { %>
+              <article class="article-card">
+                <h3><%= event.title %></h3>
+                <p><strong>Location:</strong> <%= event.location %></p>
+                <p><strong>Date:</strong> <%= formatDate(event.event_date) %></p>
+                <p><%= event.description %></p>
+              </article>
+            <% }) %>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Get Involved</div>
+            <h2>Join the movement</h2>
+          </div>
+          <div class="list-grid">
+            <div class="form-shell">
+              <h3>Membership application</h3>
+              <p>Become a member and help build a stronger political future.</p>
+              <a class="btn btn-primary" href="/membership">Apply now</a>
+            </div>
+            <div class="form-shell">
+              <h3>Volunteer with PTK</h3>
+              <p>Support campaigns, social work, and community outreach.</p>
+              <button class="btn btn-secondary" onclick="document.getElementById('volunteerForm').scrollIntoView({behavior:'smooth'})">Volunteer</button>
+            </div>
+            <div class="form-shell">
+              <h3>Raise a grievance</h3>
+              <p>Share your concern for appropriate review by the party team.</p>
+              <button class="btn btn-secondary" onclick="document.getElementById('grievanceForm').scrollIntoView({behavior:'smooth'})">Report</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" style="background:#fff;">
+        <div class="container">
+          <div class="section-header">
+            <div class="eyebrow">Public Forms</div>
+            <h2>Submit your details securely</h2>
+          </div>
+          <div class="list-grid">
+            <div class="form-shell" id="volunteerForm">
+              <h3>Volunteer registration</h3>
+              <form id="volunteerFormInner">
+                <div class="form-row">
+                  <div>
+                    <label>Full name</label>
+                    <input name="full_name" required />
+                  </div>
+                  <div>
+                    <label>Phone</label>
+                    <input name="phone" required />
+                  </div>
+                  <div>
+                    <label>Email</label>
+                    <input name="email" type="email" />
+                  </div>
+                  <div>
+                    <label>District</label>
+                    <input name="district" required />
+                  </div>
+                  <div>
+                    <label>Area of interest</label>
+                    <input name="interest" required />
+                  </div>
+                  <div>
+                    <label>Availability</label>
+                    <input name="availability" />
+                  </div>
+                </div>
+                <div style="margin-top: 12px;">
+                  <label>Message</label>
+                  <textarea name="message"></textarea>
+                </div>
+                <div style="margin-top: 16px;">
+                  <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+              </form>
+            </div>
+
+            <div class="form-shell" id="grievanceForm">
+              <h3>Public grievance</h3>
+              <form id="grievanceFormInner">
+                <div class="form-row">
+                  <div>
+                    <label>Full name</label>
+                    <input name="full_name" required />
+                  </div>
+                  <div>
+                    <label>Phone</label>
+                    <input name="phone" required />
+                  </div>
+                </div>
+                <div style="margin-top: 12px;">
+                  <label>District</label>
+                  <input name="district" />
+                </div>
+                <div style="margin-top: 12px;">
+                  <label>Subject</label>
+                  <input name="subject" required />
+                </div>
+                <div style="margin-top: 12px;">
+                  <label>Message</label>
+                  <textarea name="message" required></textarea>
+                </div>
+                <div style="margin-top: 16px;">
+                  <button class="btn btn-primary" type="submit">Send grievance</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="container">
+          <div class="form-shell">
+            <h3>Contact PTK</h3>
+            <form id="contactForm">
+              <div class="form-row">
+                <div>
+                  <label>Full name</label>
+                  <input name="full_name" required />
+                </div>
+                <div>
+                  <label>Email</label>
+                  <input name="email" type="email" />
+                </div>
+                <div>
+                  <label>Phone</label>
+                  <input name="phone" />
+                </div>
+                <div>
+                  <label>Subject</label>
+                  <input name="subject" required />
+                </div>
+              </div>
+              <div style="margin-top: 12px;">
+                <label>Message</label>
+                <textarea name="message" required></textarea>
+              </div>
+              <div style="margin-top: 16px;">
+                <button class="btn btn-primary" type="submit">Send message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h4>PTK</h4>
+          <p><%= settings.party_name_english || 'PTK — Puthiya Thalaimurai Kazhagam' %></p>
+        </div>
+        <div>
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#announcements">Announcements</a></li>
+            <li><a href="/membership">Membership</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="/admin/login">Admin</a></li>
+            <li><a href="/verify/PTK-000000">Member status lookup</a></li>
+            <li><a href="#events">Events</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <ul>
+            <li><%= settings.contact_email || 'hello@ptkparty.org' %></li>
+            <li><%= settings.contact_phone || '+91 98765 43210' %></li>
+            <li><%= settings.contact_address || 'PTK Headquarters, Tamil Nadu' %></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,25 @@
+{
+  "name": "ptk-digital-platform",
+  "version": "1.0.0",
+  "description": "PTK political party website, membership system, admin dashboard, and card management",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "ptk",
+    "political-party",
+    "membership",
+    "dashboard"
+  ],
+  "author": "PTK Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "sqlite3": "^5.1.7"
+  }
+}

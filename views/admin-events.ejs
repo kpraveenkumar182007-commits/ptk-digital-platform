@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Announcements | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 980px;">
+        <div class="section-header">
+          <div class="eyebrow">Announcements</div>
+          <h2>Create and publish updates</h2>
+        </div>
+        <div class="form-shell">
+          <form method="POST" action="/admin/announcements">
+            <div>
+              <label>Title</label>
+              <input name="title" required />
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Content</label>
+              <textarea name="content" required></textarea>
+            </div>
+            <div class="checkbox-row" style="margin-top: 18px;">
+              <input type="checkbox" name="published" value="1" />
+              <label>Publish immediately</label>
+            </div>
+            <div style="margin-top: 18px;">
+              <button class="btn btn-primary" type="submit">Save announcement</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
+          <h3>Existing announcements</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Published</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% announcements.forEach((item) => { %>
+                <tr>
+                  <td><%= item.title %></td>
+                  <td><%= item.published ? 'Yes' : 'No' %></td>
+                  <td><%= formatDate(item.created_at) %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

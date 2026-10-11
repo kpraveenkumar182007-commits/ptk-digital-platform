@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership Application | <%= settings.party_name_english %></title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Home</a>
+          <a href="/admin/login">Admin</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container">
+        <div class="section-header">
+          <div class="eyebrow">Membership</div>
+          <h2>Apply for PTK membership</h2>
+        </div>
+
+        <% if (error) { %>
+          <div class="notice error"><%= error %></div>
+        <% } %>
+
+        <% if (success) { %>
+          <div class="notice success"><%= success %></div>
+        <% } %>
+
+        <div class="form-shell">
+          <form method="POST" action="/membership">
+            <div class="form-row">
+              <div>
+                <label>Full name</label>
+                <input name="full_name" required />
+              </div>
+              <div>
+                <label>Tamil name (optional)</label>
+                <input name="tamil_name" />
+              </div>
+              <div>
+                <label>Contact number</label>
+                <input name="phone" required />
+              </div>
+              <div>
+                <label>Email</label>
+                <input name="email" type="email" />
+              </div>
+              <div>
+                <label>District</label>
+                <input name="district" required />
+              </div>
+              <div>
+                <label>Local unit</label>
+                <input name="local_unit" required />
+              </div>
+            </div>
+
+            <div style="margin-top: 18px;">
+              <label>Address</label>
+              <textarea name="address"></textarea>
+            </div>
+
+            <div style="margin-top: 18px;">
+              <label>Membership category</label>
+              <select name="membership_category" required>
+                <option value="">Select</option>
+                <option value="General Member">General Member</option>
+                <option value="Youth Member">Youth Member</option>
+                <option value="Women Member">Women Member</option>
+                <option value="Student Member">Student Member</option>
+                <option value="Volunteer">Volunteer</option>
+              </select>
+            </div>
+
+            <div class="checkbox-row" style="margin-top: 18px;">
+              <input type="checkbox" name="consent" value="on" id="consent" required />
+              <label for="consent">I agree to the privacy notice and consent to PTK processing my information for membership review.</label>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <button class="btn btn-primary" type="submit">Submit application</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

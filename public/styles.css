@@ -1,0 +1,258 @@
+const fs = require('fs');
+const path = require('path');
+const bcrypt = require('bcryptjs');
+const sqlite3 = require('sqlite3').verbose();
+
+const dbDir = path.join(__dirname, 'data');
+const dbPath = path.join(dbDir, 'ptk.db');
+const db = new sqlite3.Database(dbPath);
+
+function runQuery(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.run(sql, params, function (err) {
+      if (err) reject(err);
+      else resolve({ lastID: this.lastID, changes: this.changes });
+    });
+  });
+}
+
+function getRow(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.get(sql, params, (err, row) => {
+      if (err) reject(err);
+      else resolve(row || null);
+    });
+  });
+}
+
+function getAllRows(sql, params = []) {
+  return new Promise((resolve, reject) => {
+    db.all(sql, params, (err, rows) => {
+      if (err) reject(err);
+      else resolve(rows || []);
+    });
+  });
+}
+
+function csvEscape(value) {
+  const cell = String(value ?? '');
+  if (cell.includes(',') || cell.includes('"') || cell.includes('\n') || cell.includes('\r')) {
+    return '"' + cell.replace(/"/g, '""') + '"';
+  }
+  return cell;
+}
+
+async function initDatabase() {
+  if (!fs.existsSync(dbDir)) fs.mkdirSync(dbDir, { recursive: true });
+
+  const schema = `
+    CREATE TABLE IF NOT EXISTS settings (
+      setting_key TEXT PRIMARY KEY,
+      setting_value TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS announcements (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      content TEXT,
+      published INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      description TEXT,
+      location TEXT,
+      event_date TEXT,
+      published INTEGER DEFAULT 0,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS membership_applications (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      application_ref TEXT UNIQUE,
+      full_name TEXT NOT NULL,
+      tamil_name TEXT,
+      phone TEXT NOT NULL,
+      email TEXT,
+      district TEXT NOT NULL,
+      local_unit TEXT NOT NULL,
+      address TEXT,
+      membership_category TEXT NOT NULL,
+      consent INTEGER DEFAULT 0,
+      status TEXT DEFAULT 'pending',
+      review_note TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      member_id TEXT UNIQUE,
+      full_name TEXT NOT NULL,
+      tamil_name TEXT,
+      phone TEXT,
+      email TEXT,
+      district TEXT,
+      local_unit TEXT,
+      address TEXT,
+      membership_category TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS cards (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      member_id INTEGER UNIQUE,
+      issue_date TEXT,
+      status TEXT DEFAULT 'active',
+      revoked_at TEXT,
+      generated_by TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(member_id) REFERENCES members(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS volunteers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ref TEXT UNIQUE,
+      full_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      email TEXT,
+      district TEXT,
+      interest TEXT,
+      availability TEXT,
+      message TEXT,
+      status TEXT DEFAULT 'new',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS grievances (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ref TEXT UNIQUE,
+      full_name TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      district TEXT,
+      subject TEXT NOT NULL,
+      message TEXT NOT NULL,
+      status TEXT DEFAULT 'new',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS contact_requests (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      ref TEXT UNIQUE,
+      full_name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT,
+      subject TEXT NOT NULL,
+      message TEXT NOT NULL,
+      status TEXT DEFAULT 'new',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS finance_records (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      transaction_date TEXT,
+      classification TEXT,
+      amount REAL,
+      description TEXT,
+      reference_number TEXT,
+      supporting_document TEXT,
+      record_status TEXT DEFAULT 'approved',
+      authorised_by TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS audit_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      action TEXT,
+      details TEXT,
+      entity_type TEXT,
+      entity_id TEXT,
+      created_by TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS users (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE,
+      password_hash TEXT,
+      role TEXT DEFAULT 'admin',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS districts (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE,
+      code TEXT,
+      contact_details TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE IF NOT EXISTS local_units (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      district_id INTEGER,
+      name TEXT,
+      contact_phone TEXT,
+      contact_email TEXT,
+      status TEXT DEFAULT 'active',
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY(district_id) REFERENCES districts(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_membership_status ON membership_applications(status);
+    CREATE INDEX IF NOT EXISTS idx_members_phone ON members(phone);
+    CREATE INDEX IF NOT EXISTS idx_cards_member ON cards(member_id);
+  `;
+
+  await new Promise((resolve, reject) => {
+    db.exec(schema, (err) => (err ? reject(err) : resolve()));
+  });
+
+  const defaultSettings = [
+    ['party_name_tamil', 'PTK — புதிய தலைமுறை கழகம்'],
+    ['party_name_english', 'PTK — Puthiya Thalaimurai Kazhagam'],
+    ['tagline', 'Together for a stronger tomorrow'],
+    ['leader_name', 'PTK Leadership'],
+    ['leader_title', 'Party President'],
+    ['about_text', 'PTK is a people-first political movement founded on integrity, service, and progress for every community.'],
+    ['mission_text', 'To build a just, people-led, transparent and inclusive political future for Tamil communities.'],
+    ['vision_text', 'To create a vibrant, responsive, and democratic democratic society driven by dignity, opportunity and unity.'],
+    ['contact_email', 'hello@ptkparty.org'],
+    ['contact_phone', '+91 98765 43210'],
+    ['contact_address', 'PTK Headquarters, Tamil Nadu'],
+    ['card_red', '#A8202B'],
+    ['card_yellow', '#F2C744'],
+    ['card_green', '#16734B'],
+    ['privacy_policy', 'PTK respects privacy and processes only necessary information for member and public service support.'],
+    ['terms', 'By using this platform you agree to PTK service policies and community values.']
+  ];
+
+  for (const [key, value] of defaultSettings) {
+    await runQuery('INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON CONFLICT(setting_key) DO UPDATE SET setting_value = excluded.setting_value', [key, value]);
+  }
+
+  const adminUser = await getRow('SELECT id FROM users WHERE username = ?', ['admin']);
+  if (!adminUser) {
+    const hash = bcrypt.hashSync('admin123', 10);
+    await runQuery('INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)', ['admin', hash, 'super_admin']);
+  }
+}
+
+module.exports = {
+  db,
+  initDatabase,
+  getSettings: () => getAllRows('SELECT setting_key, setting_value FROM settings'),
+  getAllRows,
+  getRow,
+  runQuery,
+  csvEscape,
+  addAuditLog: async (action, details, entityType, entityId, createdBy) => {
+    await runQuery('INSERT INTO audit_logs (action, details, entity_type, entity_id, created_by, created_at) VALUES (?, ?, ?, ?, ?, datetime("now"))', [action, details, entityType || 'system', entityId || '', createdBy || 'system']);
+  }
+};

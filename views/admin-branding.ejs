@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/">Public site</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container admin-grid">
+        <aside class="admin-sidebar">
+          <nav>
+            <a href="/admin/dashboard">Overview</a>
+            <a href="/admin/members">Members</a>
+            <a href="/admin/branding">Branding</a>
+            <a href="/admin/content">Website content</a>
+            <a href="/admin/announcements">Announcements</a>
+            <a href="/admin/events">Events</a>
+            <a href="/admin/volunteers">Volunteers</a>
+            <a href="/admin/grievances">Grievances</a>
+            <a href="/admin/contacts">Contacts</a>
+            <a href="/admin/reports">Reports</a>
+            <a href="/admin/backup">Backup</a>
+          </nav>
+        </aside>
+
+        <section>
+          <div class="section-header">
+            <div class="eyebrow">Dashboard</div>
+            <h2>PTK administration overview</h2>
+          </div>
+
+          <div class="dashboard-panels">
+            <div class="dashboard-panel"><strong><%= stats.applications %></strong><br />Applications</div>
+            <div class="dashboard-panel"><strong><%= stats.members %></strong><br />Members</div>
+            <div class="dashboard-panel"><strong><%= stats.activeCards %></strong><br />Active cards</div>
+            <div class="dashboard-panel"><strong><%= stats.volunteers %></strong><br />Volunteers</div>
+            <div class="dashboard-panel"><strong><%= stats.grievances %></strong><br />Grievances</div>
+            <div class="dashboard-panel"><strong><%= stats.contactRequests %></strong><br />Contact requests</div>
+          </div>
+
+          <div class="dashboard-panel" style="margin-bottom:20px;">
+            <h3>Recent applications</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Name</th>
+                    <th>District</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% applications.forEach((item) => { %>
+                    <tr>
+                      <td><%= item.application_ref %></td>
+                      <td><%= item.full_name %></td>
+                      <td><%= item.district %></td>
+                      <td><%= item.status %></td>
+                      <td>
+                        <form method="POST" action="/admin/application/<%= item.id %>/status">
+                          <select name="status">
+                            <option value="pending">Pending</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                          </select>
+                          <input type="text" name="note" placeholder="Review note" style="margin-top:8px;" />
+                          <button class="btn btn-primary" type="submit" style="margin-top:8px;">Update</button>
+                        </form>
+                      </td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="dashboard-panel">
+            <h3>Recent members</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Member ID</th>
+                    <th>Name</th>
+                    <th>District</th>
+                    <th>Card</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% members.forEach((member) => { %>
+                    <tr>
+                      <td><%= member.member_id || 'N/A' %></td>
+                      <td><%= member.full_name %></td>
+                      <td><%= member.district %></td>
+                      <td><a href="/admin/card/<%= member.member_id %>">View card</a></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="dashboard-panel" style="margin-top:20px;">
+            <h3>Audit log</h3>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Action</th>
+                    <th>Details</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% logs.forEach((log) => { %>
+                    <tr>
+                      <td><%= log.action %></td>
+                      <td><%= log.details %></td>
+                      <td><%= formatDate(log.created_at) %></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

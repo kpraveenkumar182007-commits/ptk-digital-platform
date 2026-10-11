@@ -1,0 +1,43 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const volunteerForm = document.getElementById('volunteerFormInner');
+  const grievanceForm = document.getElementById('grievanceFormInner');
+  const contactForm = document.getElementById('contactForm');
+
+  const submitJson = async (form, url) => {
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    alert(result.message || 'Submitted successfully');
+  };
+
+  if (volunteerForm) {
+    volunteerForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await submitJson(volunteerForm, '/volunteer');
+      volunteerForm.reset();
+    });
+  }
+
+  if (grievanceForm) {
+    grievanceForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await submitJson(grievanceForm, '/grievance');
+      grievanceForm.reset();
+    });
+  }
+
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      await submitJson(contactForm, '/contact');
+      contactForm.reset();
+    });
+  }
+});

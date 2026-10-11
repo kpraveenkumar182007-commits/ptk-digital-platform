@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership Verification | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 720px;">
+        <div class="verify-box">
+          <% if (!valid) { %>
+            <h2>Verification failed</h2>
+            <p>This membership card is not valid or has been revoked.</p>
+          <% } else { %>
+            <h2>Membership verified</h2>
+            <p><strong><%= member.full_name %></strong> is an active PTK member.</p>
+            <p>Member ID: <strong><%= member.member_id %></strong></p>
+            <p>District: <strong><%= member.district %></strong></p>
+            <p>Membership category: <strong><%= member.membership_category %></strong></p>
+          <% } %>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

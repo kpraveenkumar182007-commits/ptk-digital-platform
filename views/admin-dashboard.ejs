@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 560px;">
+        <div class="form-shell">
+          <h2>Administrator access</h2>
+          <% if (error) { %>
+            <div class="notice error"><%= error %></div>
+          <% } %>
+          <form method="POST" action="/admin/login">
+            <div style="margin-bottom: 14px;">
+              <label>Username</label>
+              <input name="username" required />
+            </div>
+            <div style="margin-bottom: 14px;">
+              <label>Password</label>
+              <input name="password" type="password" required />
+            </div>
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
+          <p>Default admin user: <strong>admin</strong> / <strong>admin123</strong></p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

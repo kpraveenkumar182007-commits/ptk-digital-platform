@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership Card | <%= member.full_name %></title>
+    <link rel="stylesheet" href="/styles.css" />
+    <style>
+      :root {
+        --card-red: <%= settings.card_red || '#A8202B' %>;
+        --card-yellow: <%= settings.card_yellow || '#F2C744' %>;
+        --card-green: <%= settings.card_green || '#16734B' %>;
+      }
+    </style>
+  </head>
+  <body style="padding: 32px; background: #f6f6f2;">
+    <div class="ptk-membership-card">
+      <div class="card-inner">
+        <div class="card-header">
+          <div class="card-brand">
+            <div class="brand-mark" style="width: 38px; height:38px; font-size: 0.75rem;">PTK</div>
+            <div>
+              <div><%= settings.party_name_tamil || 'PTK' %></div>
+              <small><%= settings.party_name_english || 'PTK' %></small>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div style="display:flex; align-items:flex-start; gap: 14px;">
+            <img class="card-photo" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" alt="member photo" />
+            <div>
+              <strong style="font-size:1.05rem;"><%= member.full_name %></strong><br />
+              <span><%= member.tamil_name || 'Tamil name not provided' %></span>
+            </div>
+          </div>
+
+          <div class="card-metadata">
+            <div><span class="card-meta-label">Member ID</span><br /><strong><%= member.member_id %></strong></div>
+            <div><span class="card-meta-label">District</span><br /><strong><%= member.district %></strong></div>
+            <div><span class="card-meta-label">Unit</span><br /><strong><%= member.local_unit %></strong></div>
+            <div><span class="card-meta-label">Category</span><br /><strong><%= member.membership_category %></strong></div>
+            <div><span class="card-meta-label">Issue date</span><br /><strong><%= formatDate(card && card.issue_date) %></strong></div>
+            <div><span class="card-meta-label">Status</span><br /><strong><%= (card && card.status) || 'active' %></strong></div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div>
+            <div>Authorized by PTK</div>
+            <small><%= settings.leader_name || 'PTK Leadership' %></small>
+          </div>
+          <div class="qr-box">
+            <img src="<%= qrUrl %>" alt="QR code" style="width: 100%; height: 100%; object-fit: cover;" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

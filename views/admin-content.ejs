@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Branding Settings | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 980px;">
+        <div class="section-header">
+          <div class="eyebrow">Branding</div>
+          <h2>Party identity and colour settings</h2>
+        </div>
+        <% if (success) { %><div class="notice success"><%= success %></div><% } %>
+        <% if (error) { %><div class="notice error"><%= error %></div><% } %>
+        <div class="form-shell">
+          <form method="POST" action="/admin/branding">
+            <div class="form-row">
+              <div>
+                <label>Tamil party name</label>
+                <input name="party_name_tamil" value="<%= settings.party_name_tamil || '' %>" />
+              </div>
+              <div>
+                <label>English party name</label>
+                <input name="party_name_english" value="<%= settings.party_name_english || '' %>" />
+              </div>
+              <div>
+                <label>Tagline</label>
+                <input name="tagline" value="<%= settings.tagline || '' %>" />
+              </div>
+              <div>
+                <label>Leader name</label>
+                <input name="leader_name" value="<%= settings.leader_name || '' %>" />
+              </div>
+              <div>
+                <label>Leader title</label>
+                <input name="leader_title" value="<%= settings.leader_title || '' %>" />
+              </div>
+              <div>
+                <label>Contact email</label>
+                <input name="contact_email" value="<%= settings.contact_email || '' %>" />
+              </div>
+              <div>
+                <label>Contact phone</label>
+                <input name="contact_phone" value="<%= settings.contact_phone || '' %>" />
+              </div>
+              <div>
+                <label>Contact address</label>
+                <input name="contact_address" value="<%= settings.contact_address || '' %>" />
+              </div>
+            </div>
+
+            <div style="margin-top: 20px;"><h3>Membership card palette</h3></div>
+            <div class="form-row">
+              <div>
+                <label>Card red</label>
+                <input name="card_red" value="<%= settings.card_red || '#A8202B' %>" />
+              </div>
+              <div>
+                <label>Card yellow</label>
+                <input name="card_yellow" value="<%= settings.card_yellow || '#F2C744' %>" />
+              </div>
+              <div>
+                <label>Card green</label>
+                <input name="card_green" value="<%= settings.card_green || '#16734B' %>" />
+              </div>
+            </div>
+
+            <div style="margin-top: 18px;">
+              <label>About text</label>
+              <textarea name="about_text"><%= settings.about_text || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Mission text</label>
+              <textarea name="mission_text"><%= settings.mission_text || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Vision text</label>
+              <textarea name="vision_text"><%= settings.vision_text || '' %></textarea>
+            </div>
+
+            <div style="margin-top: 22px;">
+              <button class="btn btn-primary" type="submit">Save branding</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

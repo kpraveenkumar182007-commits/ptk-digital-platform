@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Content | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 960px;">
+        <div class="section-header">
+          <div class="eyebrow">Website content</div>
+          <h2>Manage content published on the public site</h2>
+        </div>
+        <% if (success) { %><div class="notice success"><%= success %></div><% } %>
+        <div class="form-shell">
+          <form method="POST" action="/admin/content">
+            <div style="margin-top: 18px;">
+              <label>About PTK</label>
+              <textarea name="about_text"><%= settings.about_text || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Mission</label>
+              <textarea name="mission_text"><%= settings.mission_text || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Vision</label>
+              <textarea name="vision_text"><%= settings.vision_text || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Privacy policy</label>
+              <textarea name="privacy_policy"><%= settings.privacy_policy || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Terms and conditions</label>
+              <textarea name="terms"><%= settings.terms || '' %></textarea>
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Contact address</label>
+              <input name="contact_address" value="<%= settings.contact_address || '' %>" />
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Contact phone</label>
+              <input name="contact_phone" value="<%= settings.contact_phone || '' %>" />
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Contact email</label>
+              <input name="contact_email" value="<%= settings.contact_email || '' %>" />
+            </div>
+            <div style="margin-top: 22px;">
+              <button class="btn btn-primary" type="submit">Save content</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

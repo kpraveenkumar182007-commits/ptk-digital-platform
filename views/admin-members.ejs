@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Events | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 980px;">
+        <div class="section-header">
+          <div class="eyebrow">Events</div>
+          <h2>Add community meetings and events</h2>
+        </div>
+        <div class="form-shell">
+          <form method="POST" action="/admin/events">
+            <div>
+              <label>Title</label>
+              <input name="title" required />
+            </div>
+            <div style="margin-top: 18px;">
+              <label>Description</label>
+              <textarea name="description" required></textarea>
+            </div>
+            <div class="form-row" style="margin-top: 18px;">
+              <div>
+                <label>Location</label>
+                <input name="location" required />
+              </div>
+              <div>
+                <label>Event date</label>
+                <input type="date" name="event_date" required />
+              </div>
+            </div>
+            <div class="checkbox-row" style="margin-top: 18px;">
+              <input type="checkbox" name="published" value="1" />
+              <label>Publish this event</label>
+            </div>
+            <div style="margin-top: 18px;">
+              <button class="btn btn-primary" type="submit">Save event</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
+          <h3>Existing events</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Published</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% events.forEach((event) => { %>
+                <tr>
+                  <td><%= event.title %></td>
+                  <td><%= formatDate(event.event_date) %></td>
+                  <td><%= event.location %></td>
+                  <td><%= event.published ? 'Yes' : 'No' %></td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

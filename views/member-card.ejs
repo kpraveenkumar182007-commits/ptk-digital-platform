@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Members | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 1060px;">
+        <div class="section-header">
+          <div class="eyebrow">Members</div>
+          <h2>Approved member directory</h2>
+        </div>
+
+        <div class="dashboard-panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Member ID</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>District</th>
+                  <th>Category</th>
+                  <th>Card</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% members.forEach((member) => { %>
+                  <tr>
+                    <td><%= member.member_id %></td>
+                    <td><%= member.full_name %></td>
+                    <td><%= member.phone %></td>
+                    <td><%= member.district %></td>
+                    <td><%= member.membership_category %></td>
+                    <td><a href="/admin/card/<%= member.member_id %>">Open card</a></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
