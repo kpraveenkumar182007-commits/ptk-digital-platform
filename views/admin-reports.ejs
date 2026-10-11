@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 1060px;">
+        <div class="section-header">
+          <div class="eyebrow">Reports</div>
+          <h2>Generate CSV exports and data reports</h2>
+        </div>
+
+        <div class="form-shell">
+          <h3>Available exports</h3>
+          <div style="display: grid; gap: 12px;">
+            <a class="btn btn-primary" href="/admin/export/csv/members">Export members (CSV)</a>
+            <a class="btn btn-primary" href="/admin/export/csv/applications">Export applications (CSV)</a>
+            <a class="btn btn-primary" href="/admin/export/csv/volunteers">Export volunteers (CSV)</a>
+          </div>
+        </div>
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
+          <h3>Member count by district</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>District</th>
+                <th>Members</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% const byDistrict = {}; members.forEach(m => { byDistrict[m.district] = (byDistrict[m.district] || 0) + 1; }); Object.entries(byDistrict).forEach(([district, count]) => { %>
+                <tr>
+                  <td><%= district %></td>
+                  <td><%= count %></td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

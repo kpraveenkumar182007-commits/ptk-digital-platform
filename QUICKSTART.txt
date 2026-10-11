@@ -1,0 +1,223 @@
+╔═══════════════════════════════════════════════════════════════════════════╗
+║                    PTK DIGITAL PLATFORM - QUICK START                     ║
+╚═══════════════════════════════════════════════════════════════════════════╝
+
+📦 INSTALLATION
+─────────────────────────────────────────────────────────────────────────────
+
+1. Clone the repository
+   $ git clone https://github.com/kpraveenkumar182007-commits/ptk-digital-platform.git
+   $ cd ptk-digital-platform
+
+2. Install dependencies
+   $ npm install
+
+3. Start the application
+   $ npm start
+
+4. Open your browser
+   http://localhost:3000
+
+
+🔑 DEFAULT ADMIN CREDENTIALS
+─────────────────────────────────────────────────────────────────────────────
+
+Username: admin
+Password: admin123
+
+⚠️  CHANGE THIS IMMEDIATELY IN PRODUCTION
+
+
+📋 WHAT'S INCLUDED
+─────────────────────────────────────────────────────────────────────────────
+
+✅ Public Homepage
+   • Hero section with party branding
+   • About, Mission, Vision sections
+   • Announcements and events
+   • Membership application
+   • Contact forms
+
+✅ Membership System
+   • Application form with validation
+   • Admin review and approval workflow
+   • Automatic member ID generation
+   • Digital membership cards
+   • QR code verification
+
+✅ Admin Dashboard
+   • Membership application management
+   • Member directory
+   • Card customization (red, yellow, green)
+   • Branding and website content management
+   • Announcements and events
+   • Volunteer and grievance tracking
+   • CSV exports and reports
+   • Database backup and restore
+   • Audit logs
+
+✅ Security
+   • Session-based authentication
+   • Server-side authorization
+   • SQL injection protection
+   • Input validation
+   • Audit logging
+
+
+🎨 MEMBERSHIP CARD DESIGN
+─────────────────────────────────────────────────────────────────────────────
+
+All cards display the three-colour PTK design:
+   RED    (top) - #A8202B
+   YELLOW (middle) - #F2C744
+   GREEN  (bottom) - #16734B
+
+These colours are always displayed together on every card.
+You can customize them from Admin → Branding → Membership card palette.
+
+
+🚀 FIRST STEPS
+─────────────────────────────────────────────────────────────────────────────
+
+1. Customize your party
+   Admin → Branding → Update party name, leader info, contact
+
+2. Add website content
+   Admin → Website content → Add mission, vision, privacy policy
+
+3. Create announcements
+   Admin → Announcements → Publish news and updates
+
+4. Test membership
+   Public site → Apply for Membership → Fill and submit
+   Admin → Dashboard → Approve application → View card
+
+5. Customize card colours (optional)
+   Admin → Branding → Membership card palette
+   Note: All three colours are always displayed together
+
+
+📁 PROJECT STRUCTURE
+─────────────────────────────────────────────────────────────────────────────
+
+ptk-digital-platform/
+├── server.js                 # Main application
+├── db.js                     # Database configuration
+├── package.json              # Dependencies
+├── public/
+│   ├── styles.css            # Main stylesheet
+│   └── app.js                # Frontend JavaScript
+├── views/                    # EJS templates
+│   ├── index.ejs             # Public homepage
+│   ├── membership.ejs        # Membership form
+│   ├── admin-*.ejs           # Admin pages
+│   └── member-card.ejs       # Membership card
+├── data/
+│   └── ptk.db                # SQLite database (auto-created)
+├── SETUP.md                  # Detailed setup guide
+├── DEPLOYMENT.md             # Production deployment guide
+└── RUNTIME-ISSUES.md         # Troubleshooting
+
+
+📊 DATABASE
+─────────────────────────────────────────────────────────────────────────────
+
+Database: SQLite (file-based)
+Location: /data/ptk.db
+Auto-initialized: Yes (on first run)
+
+Main tables:
+• settings - Party branding and website content
+• members - Approved members
+• membership_applications - Pending/approved/rejected applications
+• cards - Membership card records
+• announcements - Public announcements
+• events - Events
+• volunteers - Volunteer registrations
+• grievances - Public grievances
+• audit_logs - Admin action history
+
+
+🔧 CONFIGURATION
+─────────────────────────────────────────────────────────────────────────────
+
+Environment variables:
+  PORT=3000                    # Server port (default)
+  SESSION_SECRET="your-key"  # Session encryption
+  NODE_ENV=production          # production or development
+
+To set environment variables:
+  export PORT=3000
+  export SESSION_SECRET="random-secure-string"
+  npm start
+
+
+💾 BACKUP & RESTORE
+─────────────────────────────────────────────────────────────────────────────
+
+Backup (automated from admin panel):
+  Admin → Backup → Download backup
+  Creates JSON file with all data
+
+Restore:
+  Admin → Backup → Paste JSON content → Restore
+  Replaces all existing data from backup
+
+✓ Keep backups in secure location
+✓ Test restore on copy of data first
+✓ Admin users NOT included in backups (security)
+
+
+🌐 DEPLOYMENT
+─────────────────────────────────────────────────────────────────────────────
+
+For production deployment, see DEPLOYMENT.md
+
+Quick options:
+• Heroku: git push heroku main
+• Railway.app: Connect GitHub repo
+• DigitalOcean/AWS: Follow DEPLOYMENT.md
+
+Important for production:
+✓ Use strong SESSION_SECRET
+✓ Enable HTTPS/SSL
+✓ Change default admin password
+✓ Set up automated backups
+✓ Configure firewall
+✓ Set up monitoring
+
+
+🐛 TROUBLESHOOTING
+─────────────────────────────────────────────────────────────────────────────
+
+See RUNTIME-ISSUES.md for detailed solutions.
+
+Quick fixes:
+
+Port already in use:
+  $ lsof -i :3000 | grep node | awk '{print $2}' | xargs kill -9
+
+Dependencies missing:
+  $ npm install
+
+Database locked:
+  $ rm data/ptk.db
+  $ npm start  # Reinitialize
+
+Admin login fails:
+  • Username: admin
+  • Password: admin123
+  • Check /data/ptk.db exists
+
+
+📞 SUPPORT
+─────────────────────────────────────────────────────────────────────────────
+
+Issues: https://github.com/kpraveenkumar182007-commits/ptk-digital-platform/issues
+Documentation: See SETUP.md, DEPLOYMENT.md, RUNTIME-ISSUES.md
+
+
+✨ ENJOY YOUR PTK DIGITAL PLATFORM!
+─────────────────────────────────────────────────────────────────────────────
+
+Built with ❤️ for PTK - Puthiya Thalaimurai Kazhagam

@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  ptk-platform:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - SESSION_SECRET=your-secret-key-change-in-production
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grievances | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 1060px;">
+        <div class="section-header">
+          <div class="eyebrow">Grievances</div>
+          <h2>Public grievance submissions</h2>
+        </div>
+
+        <div class="dashboard-panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>District</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% grievances.forEach((grv) => { %>
+                  <tr>
+                    <td><%= grv.ref %></td>
+                    <td><%= grv.full_name %></td>
+                    <td><%= grv.phone %></td>
+                    <td><%= grv.district || 'N/A' %></td>
+                    <td><%= grv.subject %></td>
+                    <td><%= grv.status %></td>
+                    <td><%= formatDate(grv.created_at) %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

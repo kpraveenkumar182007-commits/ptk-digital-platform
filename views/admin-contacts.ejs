@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Requests | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 1060px;">
+        <div class="section-header">
+          <div class="eyebrow">Contact Requests</div>
+          <h2>Public contact form submissions</h2>
+        </div>
+
+        <div class="dashboard-panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Reference</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% contacts.forEach((contact) => { %>
+                  <tr>
+                    <td><%= contact.ref %></td>
+                    <td><%= contact.full_name %></td>
+                    <td><%= contact.email || 'N/A' %></td>
+                    <td><%= contact.phone || 'N/A' %></td>
+                    <td><%= contact.subject %></td>
+                    <td><%= contact.status %></td>
+                    <td><%= formatDate(contact.created_at) %></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>

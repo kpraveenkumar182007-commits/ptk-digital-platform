@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Backup & Restore | PTK</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container topbar">
+        <div class="brand">
+          <div class="brand-mark">PTK</div>
+          <div>
+            <div><%= settings.party_name_tamil %></div>
+            <small><%= settings.party_name_english %></small>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="/admin/dashboard">Dashboard</a>
+          <a href="/admin/logout">Logout</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="admin-shell">
+      <div class="container" style="max-width: 960px;">
+        <div class="section-header">
+          <div class="eyebrow">Backup & Restore</div>
+          <h2>Database backup and recovery</h2>
+        </div>
+
+        <div class="dashboard-panel">
+          <h3>Export database backup</h3>
+          <p>Download a complete JSON backup of all platform data. This file can be used to restore data later.</p>
+          <a class="btn btn-primary" href="/admin/backup">Download backup</a>
+        </div>
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
+          <h3>Restore from backup</h3>
+          <p>Upload a previously exported backup file. This will replace existing records with data from the backup.</p>
+          <form method="POST" action="/admin/restore">
+            <div style="margin-bottom: 16px;">
+              <label>Paste JSON backup content</label>
+              <textarea name="backup_json" style="min-height: 200px; font-family: monospace;"></textarea>
+            </div>
+            <div>
+              <button class="btn btn-primary" type="submit" onclick="return confirm('This will replace existing data. Continue?')">Restore from backup</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="dashboard-panel" style="margin-top: 24px;">
+          <h3>Backup information</h3>
+          <ul>
+            <li>Backups include all settings, members, applications, announcements, events, and audit logs</li>
+            <li>Admin user accounts are NOT included in backups for security</li>
+            <li>Restore will clear existing data for each table and load from backup</li>
+            <li>Keep backups in a secure location</li>
+            <li>Test restore on a copy of your data first</li>
+          </ul>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
