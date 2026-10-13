@@ -73,9 +73,9 @@ async function syncMemberCsv() {
     'email', 'district', 'local_unit', 'address', 'membership_category',
     'status', 'created_at', 'updated_at'
   ];
-  const csv = '\\uFEFF' + [headers.join(',')]
+  const csv = '\uFEFF' + [headers.join(',')]
     .concat(rows.map(row => headers.map(key => csvEscape(row[key])).join(',')))
-    .join('\\r\\n') + '\\r\\n';
+    .join('\r\n') + '\r\n';
   const filePath = process.env.MEMBER_CSV_PATH || path.join(__dirname, 'data', 'ptk-members.csv');
   await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
   await fs.promises.writeFile(filePath, csv, 'utf8');
