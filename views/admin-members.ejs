@@ -1,10 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Events | PTK</title>
+    <title>உறுப்பினர்கள் | PTK</title>
     <link rel="stylesheet" href="/styles.css" />
+    <style>
+      .member-toolbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:18px 0}
+      .member-search{max-width:360px;width:100%}
+      .table-wrap{overflow-x:auto}
+      .status-pill{display:inline-block;padding:4px 9px;border-radius:999px;background:#e5f5e9;color:#17663a;font-size:.85rem}
+      .empty-state{padding:28px;text-align:center;color:#666}
+    </style>
   </head>
   <body>
     <header class="site-header">
@@ -17,66 +24,50 @@
           </div>
         </div>
         <nav class="nav">
-          <a href="/admin/dashboard">Dashboard</a>
-          <a href="/admin/logout">Logout</a>
+          <a href="/admin/dashboard">நிர்வாக முகப்பு</a>
+          <a href="/admin/logout">வெளியேறு</a>
         </nav>
       </div>
     </header>
-
     <main class="admin-shell">
-      <div class="container" style="max-width: 980px;">
+      <div class="container">
         <div class="section-header">
-          <div class="eyebrow">Events</div>
-          <h2>Add community meetings and events</h2>
+          <div class="eyebrow">PTK · நிர்வாக மையம்</div>
+          <h2>உறுப்பினர் மேலாண்மை</h2>
+          <p>ஒப்புதல் பெற்ற உறுப்பினர்களின் நிரந்தரப் பதிவுகள்.</p>
         </div>
-        <div class="form-shell">
-          <form method="POST" action="/admin/events">
-            <div>
-              <label>Title</label>
-              <input name="title" required />
-            </div>
-            <div style="margin-top: 18px;">
-              <label>Description</label>
-              <textarea name="description" required></textarea>
-            </div>
-            <div class="form-row" style="margin-top: 18px;">
-              <div>
-                <label>Location</label>
-                <input name="location" required />
-              </div>
-              <div>
-                <label>Event date</label>
-                <input type="date" name="event_date" required />
-              </div>
-            </div>
-            <div class="checkbox-row" style="margin-top: 18px;">
-              <input type="checkbox" name="published" value="1" />
-              <label>Publish this event</label>
-            </div>
-            <div style="margin-top: 18px;">
-              <button class="btn btn-primary" type="submit">Save event</button>
-            </div>
-          </form>
+        <div class="member-toolbar">
+          <input id="memberSearch" class="member-search" type="search" placeholder="பெயர், உறுப்பினர் எண், மாவட்டம் அல்லது கைபேசி மூலம் தேடவும்" aria-label="உறுப்பினர்களைத் தேடவும்" />
+          <a class="btn btn-primary" href="/admin/export/csv/members">உறுப்பினர் CSV பதிவிறக்கம்</a>
         </div>
-
-        <div class="dashboard-panel" style="margin-top: 24px;">
-          <h3>Existing events</h3>
-          <table>
+        <div class="dashboard-panel table-wrap">
+          <table id="membersTable">
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Published</th>
+                <th>உறுப்பினர் எண்</th>
+                <th>பெயர்</th>
+                <th>கைபேசி</th>
+                <th>மாவட்டம்</th>
+                <th>உள்ளூர் பிரிவு</th>
+                <th>வகை</th>
+                <th>நிலை</th>
+                <th>பதிவு தேதி</th>
               </tr>
             </thead>
             <tbody>
-              <% events.forEach((event) => { %>
+              <% if (!members.length) { %>
+                <tr><td colspan="8" class="empty-state">உறுப்பினர் பதிவுகள் இன்னும் இல்லை. புதிய விண்ணப்பங்கள் முதலில் விண்ணப்ப மேலாண்மையில் நிலுவையில் தோன்றும்; ஒப்புதல் பெற்ற பிறகு இங்கு காணப்படும்.</td></tr>
+              <% } %>
+              <% members.forEach((member) => { %>
                 <tr>
-                  <td><%= event.title %></td>
-                  <td><%= formatDate(event.event_date) %></td>
-                  <td><%= event.location %></td>
-                  <td><%= event.published ? 'Yes' : 'No' %></td>
+                  <td><strong><%= member.member_id %></strong></td>
+                  <td><%= member.full_name %><% if (member.tamil_name) { %><br><small><%= member.tamil_name %></small><% } %></td>
+                  <td><%= member.phone %></td>
+                  <td><%= member.district %></td>
+                  <td><%= member.local_unit %></td>
+                  <td><%= member.membership_category %></td>
+                  <td><span class="status-pill"><%= member.status === 'active' ? 'செயலில்' : member.status %></span></td>
+                  <td><%= formatDate(member.created_at) %></td>
                 </tr>
               <% }) %>
             </tbody>
@@ -84,5 +75,14 @@
         </div>
       </div>
     </main>
+    <script>
+      const search = document.getElementById('memberSearch');
+      search.addEventListener('input', () => {
+        const q = search.value.trim().toLocaleLowerCase();
+        document.querySelectorAll('#membersTable tbody tr').forEach(row => {
+          row.hidden = !row.innerText.toLocaleLowerCase().includes(q);
+        });
+      });
+    </script>
   </body>
 </html>
