@@ -312,6 +312,7 @@ app.post('/admin/application/:id/status', requireAuth, async (req, res) => {
   }
 
   await addAuditLog('application_status_updated', `Application ${application.application_ref} marked ${status}`, 'membership_application', application.id, req.session.user.username);
+  await syncMemberCsv();
   res.redirect('/admin/dashboard');
 });
 
