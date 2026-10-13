@@ -53,6 +53,34 @@ async function loadSiteSettings() {
   return Object.fromEntries(rows.map(r => [r.setting_key, r.setting_value]));
 }
 
+/**
+ * Keep a server-side CSV snapshot of every membership application.
+ * The SQLite database is the source of truth; this CSV is a convenience export.
+ * Set MEMBER_CSV_PATH to a persistent volume path in production.
+ */
+async function syncMemberCsv() {
+  const rows = await getAllRows(`
+    SELECT a.application_ref, COALESCE(m.member_id, '') AS member_id,
+           a.full_name, a.tamil_name, a.phone, a.email, a.district,
+           a.local_unit, a.address, a.membership_category, a.status,
+           a.created_at, a.updated_at
+    FROM membership_applications a
+    LEFT JOIN members m ON m.phone = a.phone AND m.full_name = a.full_name
+    ORDER BY a.created_at DESC
+  `);
+  const headers = [
+    'application_ref', 'member_id', 'full_name', 'tamil_name', 'phone',
+    'email', 'district', 'local_unit', 'address', 'membership_category',
+    'status', 'created_at', 'updated_at'
+  ];
+  const csv = '\uFEFF' + [headers.join(',')]
+    .concat(rows.map(row => headers.map(key => csvEscape(row[key])).join(',')))
+    .join('\r\n') + '\r\n';
+  const filePath = process.env.MEMBER_CSV_PATH || path.join(__dirname, 'data', 'ptk-members.csv');
+  await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
+  await fs.promises.writeFile(filePath, csv, 'utf8');
+}
+
 function redirectIfLoggedIn(req, res, next) {
   if (req.session.user) return res.redirect('/admin/dashboard');
   next();
@@ -128,6 +156,7 @@ app.post('/membership', async (req, res) => {
   );
 
   await addAuditLog('membership_application_submitted', `Application ${ref} submitted by ${form.full_name}`, 'membership_application', ref, 'public');
+  await syncMemberCsv();
 
   res.render('membership', {
     settings,
@@ -249,6 +278,7 @@ app.post('/admin/application/:id/status', requireAuth, async (req, res) => {
   if (!application) return res.status(404).send('Application not found');
 
   await runQuery('UPDATE membership_applications SET status = ?, review_note = ?, updated_at = datetime("now") WHERE id = ?', [status, note || null, id]);
+  await syncMemberCsv();
 
   if (status === 'approved') {
     const memberId = createMemberId();
@@ -282,6 +312,7 @@ app.post('/admin/application/:id/status', requireAuth, async (req, res) => {
   }
 
   await addAuditLog('application_status_updated', `Application ${application.application_ref} marked ${status}`, 'membership_application', application.id, req.session.user.username);
+  await syncMemberCsv();
   res.redirect('/admin/dashboard');
 });
 
@@ -480,7 +511,8 @@ app.get('*', async (req, res) => {
   res.status(404).render('404', { settings });
 });
 
-initDatabase().then(() => {
+initDatabase().then(async () => {
+  await syncMemberCsv();
   app.listen(port, () => {
     console.log(`PTK platform running on http://localhost:${port}`);
   });
